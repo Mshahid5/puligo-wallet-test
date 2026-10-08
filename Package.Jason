@@ -1,0 +1,16 @@
+{
+  "name": "puligo-wallet-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@reown/appkit": "latest",
+    "@reown/appkit-adapter-ethers": "latest",
+    "ethers": "latest",
+    "vite": "latest"
+  }
+}
