@@ -1,0 +1,660 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131f">
+  <title>PuliGo Lottery | BNB Chain</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10131f;
+      --panel: #191f30;
+      --panel2: #222b40;
+      --border: #34405a;
+      --text: #f4f6ff;
+      --muted: #aeb8d0;
+      --green: #36e0a1;
+      --red: #ff7585;
+      --gold: #ffd479;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 750;
+      background: var(--green);
+      color: #10131f;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: auto;
+      padding: 24px 0 42px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo { font-size: 42px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(24px, 4vw, 34px); margin-bottom: 4px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+    .muted, .subtitle { color: var(--muted); }
+    .subtitle { margin-bottom: 0; }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #4b3b20;
+      color: var(--gold);
+    }
+
+    .wallet-button { background: var(--panel2); color: white; border: 1px solid var(--border); }
+
+    .notice {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice strong { color: var(--gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .timer {
+      font-size: clamp(32px, 7vw, 52px);
+      font-weight: 850;
+      letter-spacing: 1px;
+      margin: 10px 0;
+      color: var(--green);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      background: var(--panel2);
+      padding: 13px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .stat span { display: block; color: var(--muted); font-size: 12px; }
+    .stat strong { display: block; margin-top: 7px; overflow-wrap: anywhere; }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 15px 0 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 9px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .row > * { flex: 1; }
+
+    .secondary {
+      background: var(--panel2);
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .green { color: var(--green); }
+    .gold { color: var(--gold); }
+    .red { color: var(--red); }
+
+    .message {
+      margin-top: 14px;
+      min-height: 22px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .ticket, .round {
+      background: var(--panel2);
+      border-radius: 10px;
+      padding: 13px;
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .ticket {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .small { font-size: 12px; color: var(--muted); }
+    .numbers { color: var(--gold); font-weight: 800; letter-spacing: 2px; }
+
+    footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .stats { grid-template-columns: 1fr; }
+      .card { padding: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <div class="brand">
+        <span class="logo">🐶</span>
+        <div>
+          <h1>PuliGo Lottery</h1>
+          <p class="subtitle">Community lottery · BNB Smart Chain</p>
+        </div>
+      </div>
+      <button id="connect-wallet" class="wallet-button">Connect Wallet</button>
+    </header>
+
+    <div class="notice">
+      <strong>DEMO MODE ONLY</strong><br>
+      No cryptocurrency is transferred. Demo tickets, countdowns, results,
+      and winnings are stored in this browser session. They are not real
+      blockchain transactions or a secure lottery draw.
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <span class="pill">CURRENT ROUND · DEMO</span>
+        <h2 style="margin-top:16px">Next draw in</h2>
+        <div id="countdown" class="timer">06:00:00</div>
+        <p class="muted">Planned draw frequency: every six hours.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <span>Round</span>
+            <strong id="round-number">#1</strong>
+          </div>
+          <div class="stat">
+            <span>Demo tickets</span>
+            <strong id="ticket-total">0</strong>
+          </div>
+          <div class="stat">
+            <span>Demo ticket pool</span>
+            <strong id="pool-total">$0.00</strong>
+          </div>
+        </div>
+        <p class="message" id="round-status" aria-live="polite">
+          Demo round is open.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Buy Demo Tickets</h2>
+        <p class="muted">Preview the ticket flow without making a payment.</p>
+
+        <label for="currency">Payment currency preview</label>
+        <select id="currency">
+          <option value="BNB">BNB · Demo</option>
+          <option value="PULIGO">PULIGO · Demo</option>
+          <option value="USDT">BSC USDT · Demo</option>
+        </select>
+
+        <label for="ticket-count-input">Number of tickets (1–10)</label>
+        <input id="ticket-count-input" type="number" min="1" max="10" step="1" value="1">
+
+        <div class="stat" style="margin-top:14px">
+          <span>Illustrative ticket price</span>
+          <strong>$1.00 equivalent per ticket</strong>
+          <span class="small">Real token conversion rates are not connected.</span>
+        </div>
+
+        <button id="buy-tickets" style="width:100%;margin-top:16px">
+          Buy Demo Tickets
+        </button>
+        <p id="buy-status" class="message" aria-live="polite">
+          No tickets purchased.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Prize Distribution Preview</h2>
+        <p class="muted">Illustrative allocation from eligible ticket revenue.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <span>Winner pool · 60%</span>
+            <strong id="winner-pool" class="green">$0.00</strong>
+          </div>
+          <div class="stat">
+            <span>Platform share · 40%</span>
+            <strong id="platform-pool">$0.00</strong>
+          </div>
+          <div class="stat">
+            <span>Demo winners</span>
+            <strong>Up to 5</strong>
+          </div>
+        </div>
+
+        <label for="winner-count">Demo winner count</label>
+        <select id="winner-count">
+          <option value="1">1 winner</option>
+          <option value="2">2 winners</option>
+          <option value="3">3 winners</option>
+          <option value="4">4 winners</option>
+          <option value="5" selected>5 winners</option>
+        </select>
+
+        <p class="small">
+          Actual rules must define eligibility, rounding, unclaimed prizes,
+          and what happens when a round has too few tickets.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>My Demo Tickets</h2>
+        <div id="my-tickets">
+          <p class="muted">Your demo tickets will appear here.</p>
+        </div>
+      </section>
+
+      <section class="card full">
+        <h2>Draw Results</h2>
+        <p class="muted">
+          The button below simulates a result for testing the interface.
+          It does not use secure randomness and cannot select real winners.
+        </p>
+        <button id="run-demo-draw" class="secondary">
+          Run Demo Draw
+        </button>
+        <p id="draw-status" class="message" aria-live="polite">
+          No demo draw has been completed.
+        </p>
+        <div id="draw-results"></div>
+      </section>
+
+      <section class="card full">
+        <h2>Claim Demo Winnings</h2>
+        <p class="muted">
+          Only demo results generated in this page can be claimed.
+          This does not transfer funds.
+        </p>
+        <div id="claim-list">
+          <p class="muted">No demo prizes available.</p>
+        </div>
+        <p id="claim-status" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card full">
+        <h2>Previous Rounds</h2>
+        <div id="round-history">
+          <p class="muted">No previous demo rounds.</p>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      PuliGo Lottery development preview.<br>
+      Real-money lottery functionality requires a reviewed smart contract,
+      secure verifiable randomness, reliable automation, and appropriate
+      legal authorization before launch.
+    </footer>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      round: 1,
+      startedAt: Date.now(),
+      duration: 6 * 60 * 60 * 1000,
+      tickets: [],
+      history: [],
+      claims: [],
+      nextTicketId: 1,
+      wallet: null,
+      drawn: false,
+      revenue: 0
+    };
+
+    function money(value) {
+      return '$' + Number(value).toFixed(2);
+    }
+
+    function remainingMs() {
+      return Math.max(0, state.duration - (Date.now() - state.startedAt));
+    }
+
+    function updateCountdown() {
+      const totalSeconds = Math.ceil(remainingMs() / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      $('countdown').textContent = `${hours}:${minutes}:${seconds}`;
+
+      if (totalSeconds === 0 && !state.drawn) {
+        $('round-status').textContent =
+          'The demo countdown ended. Use Run Demo Draw to test the result screen.';
+      }
+    }
+
+    function renderTickets() {
+      const container = $('my-tickets');
+      container.replaceChildren();
+
+      if (!state.tickets.length) {
+        container.textContent = 'No demo tickets purchased yet.';
+        container.className = 'muted';
+        return;
+      }
+
+      container.className = '';
+      state.tickets.forEach((ticket) => {
+        const item = document.createElement('div');
+        item.className = 'ticket';
+
+        const details = document.createElement('div');
+        const title = document.createElement('strong');
+        title.textContent = `Ticket #${ticket.id}`;
+        const info = document.createElement('div');
+        info.className = 'small';
+        info.textContent = `${ticket.currency} demo · Round #${ticket.round}`;
+
+        details.append(title, info);
+
+        const status = document.createElement('span');
+        status.className = ticket.winner ? 'green' : 'muted';
+        status.textContent = ticket.winner ? 'Winner' : 'Entered';
+
+        item.append(details, status);
+        container.appendChild(item);
+      });
+    }
+
+    function renderClaims() {
+      const container = $('claim-list');
+      container.replaceChildren();
+
+      const pending = state.claims.filter((claim) => !claim.claimed);
+
+      if (!pending.length) {
+        container.textContent = 'No unclaimed demo prizes.';
+        container.className = 'muted';
+        return;
+      }
+
+      container.className = '';
+
+      pending.forEach((claim) => {
+        const item = document.createElement('div');
+        item.className = 'ticket';
+
+        const text = document.createElement('span');
+        text.textContent = `Round #${claim.round} · Demo prize ${money(claim.amount)}`;
+
+        const button = document.createElement('button');
+        button.textContent = 'Claim Demo Prize';
+        button.addEventListener('click', () => {
+          claim.claimed = true;
+          $('claim-status').textContent =
+            `${money(claim.amount)} demo prize marked as claimed. No funds transferred.`;
+          renderClaims();
+        });
+
+        item.append(text, button);
+        container.appendChild(item);
+      });
+    }
+
+    function renderHistory() {
+      const container = $('round-history');
+      container.replaceChildren();
+
+      if (!state.history.length) {
+        container.textContent = 'No previous demo rounds.';
+        container.className = 'muted';
+        return;
+      }
+
+      container.className = '';
+
+      state.history.forEach((round) => {
+        const item = document.createElement('div');
+        item.className = 'round';
+
+        const title = document.createElement('strong');
+        title.textContent = `Round #${round.number}`;
+
+        const details = document.createElement('p');
+        details.className = 'small';
+        details.textContent =
+          `${round.ticketCount} tickets · ${round.winnerCount} demo winners · ` +
+          `${money(round.winnerPool)} demo winner pool`;
+
+        item.append(title, details);
+        container.appendChild(item);
+      });
+    }
+
+    function updateStats() {
+      const revenue = state.tickets.length;
+      $('round-number').textContent = '#' + state.round;
+      $('ticket-total').textContent = String(state.tickets.length);
+      $('pool-total').textContent = money(revenue);
+      $('winner-pool').textContent = money(revenue * 0.60);
+      $('platform-pool').textContent = money(revenue * 0.40);
+    }
+
+    function buyDemoTickets() {
+      if (state.drawn) {
+        $('buy-status').textContent =
+          'This demo round has ended. Start a new round after the demo draw.';
+        return;
+      }
+
+      const count = Number($('ticket-count-input').value);
+
+      if (!Number.isInteger(count) || count < 1 || count > 10) {
+        $('buy-status').textContent = 'Enter a whole number from 1 to 10.';
+        return;
+      }
+
+      for (let i = 0; i < count; i++) {
+        state.tickets.push({
+          id: state.nextTicketId++,
+          round: state.round,
+          currency: $('currency').value,
+          winner: false
+        });
+      }
+
+      $('buy-status').textContent =
+        `${count} demo ticket(s) added. No payment was made.`;
+      $('round-status').textContent = 'Demo round is open.';
+      renderTickets();
+      updateStats();
+    }
+
+    function runDemoDraw() {
+      if (state.drawn) {
+        $('draw-status').textContent = 'This demo round has already been drawn.';
+        return;
+      }
+
+      if (!state.tickets.length) {
+        $('draw-status').textContent =
+          'Add at least one demo ticket before running a demo draw.';
+        return;
+      }
+
+      state.drawn = true;
+      const requestedWinners = Number($('winner-count').value);
+      const shuffled = [...state.tickets];
+
+      // Demonstration only. Math.random() is not secure lottery randomness.
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      const winners = shuffled.slice(0, Math.min(requestedWinners, shuffled.length));
+      const winnerPool = state.tickets.length * 0.60;
+      const prizePerWinner = winnerPool / winners.length;
+      const winnerIds = new Set(winners.map((ticket) => ticket.id));
+
+      state.tickets.forEach((ticket) => {
+        ticket.winner = winnerIds.has(ticket.id);
+      });
+
+      winners.forEach((ticket) => {
+        state.claims.push({
+          round: state.round,
+          ticketId: ticket.id,
+          amount: prizePerWinner,
+          claimed: false
+        });
+      });
+
+      state.history.unshift({
+        number: state.round,
+        ticketCount: state.tickets.length,
+        winnerCount: winners.length,
+        winnerPool
+      });
+
+      $('draw-status').textContent =
+        `Demo draw completed. ${winners.length} demo winner(s). ` +
+        `Prize per winning ticket: ${money(prizePerWinner)}. No real payout occurred.`;
+
+      const resultContainer = $('draw-results');
+      resultContainer.replaceChildren();
+
+      winners.forEach((ticket) => {
+        const item = document.createElement('div');
+        item.className = 'ticket';
+
+        const left = document.createElement('strong');
+        left.textContent = `Ticket #${ticket.id}`;
+
+        const right = document.createElement('span');
+        right.className = 'green';
+        right.textContent = money(prizePerWinner) + ' demo prize';
+
+        item.append(left, right);
+        resultContainer.appendChild(item);
+      });
+
+      $('round-status').textContent = 'Demo round completed.';
+      $('buy-tickets').disabled = true;
+
+      renderTickets();
+      renderClaims();
+      renderHistory();
+    }
+
+    function startNextDemoRound() {
+      state.round += 1;
+      state.startedAt = Date.now();
+      state.tickets = [];
+      state.drawn = false;
+      $('buy-tickets').disabled = false;
+      $('buy-status').textContent = 'New demo round started. No payment made.';
+      $('draw-status').textContent = 'No demo draw has been completed.';
+      $('draw-results').replaceChildren();
+      $('round-status').textContent = 'Demo round is open.';
+      renderTickets();
+      updateStats();
+      updateCountdown();
+    }
+
+    $('connect-wallet').addEventListener('click', () => {
+      $('round-status').textContent =
+        'Wallet connection is not integrated on this demo page yet. No wallet was connected.';
+    });
+
+    $('buy-tickets').addEventListener('click', buyDemoTickets);
+    $('run-demo-draw').addEventListener('click', runDemoDraw);
+
+    updateStats();
+    updateCountdown();
+    renderTickets();
+    renderClaims();
+    renderHistory();
+
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+          </html>
