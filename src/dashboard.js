@@ -1,4 +1,4 @@
-```javascript
+
 // PuliGo Gaming Dashboard
 // DEMO ONLY — no real cryptocurrency transactions.
 
