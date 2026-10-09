@@ -1,1 +1,201 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10131f">
+  <title>PuliGo Web3 Gaming</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    body { background:#0b1020; color:#f5f7ff; font-family:Arial,sans-serif; margin:0; }
+    .container { max-width:1100px; margin:auto; padding:20px; }
+    .topbar,.brand,.nav,.balance-row,.actions { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .topbar { padding:18px 0; border-bottom:1px solid #293149; }
+    .brand h1 { margin:0; font-size:25px; }
+    .brand p,.muted { color:#9ca8c5; margin:5px 0; }
+    .logo { font-size:36px; }
+    button,select,input { padding:12px; border-radius:10px; border:1px solid #34415f; background:#151d32; color:#fff; font-size:15px; }
+    button { cursor:pointer; font-weight:bold; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    .connect-btn,.play-btn,.primary { background:#19b985; color:#06150f; border:0; }
+    .nav { justify-content:flex-start; margin:20px 0; }
+    .nav button { background:#172139; }
+    .nav button.active { background:#19b985; color:#06150f; }
+    .status,.notice { padding:12px; border-radius:10px; background:#151d32; margin:12px 0; color:#c8d3ee; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+    .card { background:#111a2d; border:1px solid #283550; border-radius:16px; padding:18px; margin-bottom:16px; }
+    .card h2,.card h3 { margin-top:0; }
+    .big { font-size:32px; font-weight:bold; color:#36e0a1; margin:16px 0; }
+    .tag { display:inline-block; padding:5px 9px; border-radius:20px; background:#27344e; color:#b9c8e8; font-size:12px; }
+    label { display:block; margin:12px 0 6px; color:#b9c8e8; }
+    input,select { width:100%; box-sizing:border-box; }
+    .actions { justify-content:flex-start; margin-top:12px; }
+    .section { display:none; }
+    .section.active { display:block; }
+    .chart-area { height:160px; background:linear-gradient(#16243a,#0d1425); border-radius:12px; margin:15px 0; overflow:hidden; }
+    #chart { width:100%; height:100%; }
+    .history span { display:inline-block; padding:7px; margin:4px; background:#27344e; border-radius:7px; }
+    .demo-badge { color:#ffd166; font-weight:bold; }
+    .footer { color:#9ca8c5; font-size:13px; text-align:center; padding:20px 0; }
+    @media(max-width:600px) { .container {padding:12px;} .brand h1 {font-size:21px;} .nav button {flex:1;} }
+  </style>
+</head>
+<body>
+<main class="container">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🐶</span>
+      <div>
+        <h1>PuliGo Gaming</h1>
+        <p>BNB Smart Chain · Web3 Gaming</p>
+      </div>
+    </div>
+    <button id="connect" class="connect-btn">Connect Wallet</button>
+  </header>
+
+  <div id="status" class="status">Wallet not connected</div>
+
+  <nav class="nav">
+    <button class="active" data-page="dashboard">Dashboard</button>
+    <button data-page="crash">Crash Game</button>
+    <button data-page="lottery">Lottery</button>
+    <button data-page="staking">Staking</button>
+    <button data-page="account">My Account</button>
+  </nav>
+
+  <section id="dashboard" class="section active">
+    <div class="card">
+      <span class="tag">DEMO PREVIEW</span>
+      <h2>Welcome to PuliGo Gaming</h2>
+      <p class="muted">Explore the Crash Game, Lottery, staking interface and account dashboard.</p>
+      <div class="grid">
+        <div class="card"><h3>Crash Game</h3><p class="muted">Multiplier game with virtual credits.</p><button data-go="crash" class="primary">Open Game</button></div>
+        <div class="card"><h3>Lottery</h3><p class="muted">Demo tickets and simulated prize draws.</p><button data-go="lottery" class="primary">Open Lottery</button></div>
+        <div class="card"><h3>Staking</h3><p class="muted">Preview staking and reward controls.</p><button data-go="staking" class="primary">Open Staking</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="crash" class="section">
+    <div class="card">
+      <div class="balance-row"><h2>Crash Game</h2><span class="demo-badge">DEMO ONLY</span></div>
+      <p class="muted">Virtual credits only. No real-money bets.</p>
+      <div class="big" id="multiplier">1.00×</div>
+      <div id="game-message">Ready for the next round?</div>
+      <div class="chart-area">
+        <svg id="chart" viewBox="0 0 600 220" preserveAspectRatio="none">
+          <path id="chart-line" d="M 10 205" fill="none" stroke="#36e0a1" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="balance-row"><span>Demo balance</span><strong><span id="balance">1000.00</span> credits</strong></div>
+      <label for="currency">Demo currency</label>
+      <select id="currency">
+        <option value="BNB">BNB (demo)</option>
+        <option value="PULIGO">PULIGO (demo)</option>
+        <option value="USDT">BSC USDT (demo)</option>
+      </select>
+      <label for="bet-amount">Bet amount (virtual credits)</label>
+      <input id="bet-amount" type="number" min="1" max="100" step="1" value="10">
+      <div class="actions">
+        <button id="start-game" class="play-btn">Place Demo Bet</button>
+        <button id="cash-out" disabled>Cash Out</button>
+      </div>
+      <p id="game-status" class="status">Choose an amount to start.</p>
+    </div>
+    <div class="card"><h3>Previous Crash Rounds</h3><div id="history" class="history">No rounds played yet.</div></div>
+  </section>
+
+  <section id="lottery" class="section">
+    <div class="grid">
+      <div class="card">
+        <span class="tag">LOTTERY DEMO</span>
+        <h2>PuliGo Lottery</h2>
+        <p class="muted">Illustrative ticket price: $1. No real payment is taken.</p>
+        <label for="lottery-currency">Display currency</label>
+        <select id="lottery-currency">
+          <option value="BNB">BNB (demo)</option>
+          <option value="PULIGO">PULIGO (demo)</option>
+          <option value="USDT">BSC USDT (demo)</option>
+        </select>
+        <label for="ticket-count">Number of demo tickets</label>
+        <input id="ticket-count" type="number" min="1" max="20" value="1">
+        <div class="actions"><button id="buy-ticket" class="primary">Buy Demo Ticket</button></div>
+        <p id="lottery-status" class="status">No tickets purchased.</p>
+        <h3>My Tickets</h3><div id="my-tickets">No tickets yet.</div>
+      </div>
+      <div class="card">
+        <h2>Prize Pool Preview</h2>
+        <div class="big" id="prize-pool">0.00</div>
+        <p class="muted">Illustrative split: 60% winner pool / 40% platform share.</p>
+        <label for="winner-count">Demo winners</label>
+        <select id="winner-count">
+          <option value="1">1 winner</option><option value="2">2 winners</option>
+          <option value="3">3 winners</option><option value="5">5 winners</option>
+        </select>
+        <button id="run-draw" class="primary">Run Demo Draw</button>
+        <p id="draw-status" class="status">Draw has not run.</p>
+        <button id="claim-prize">Claim Demo Prize</button>
+        <p id="claim-status" class="status">No demo prize claimed.</p>
+      </div>
+    </div>
+    <div class="card"><h3>Previous Lottery Rounds</h3><div id="lottery-history">No rounds yet.</div></div>
+  </section>
+
+  <section id="staking" class="section">
+    <div class="grid">
+      <div class="card">
+        <h2>PULIGO Staking</h2><span class="tag">SIMULATED</span>
+        <p class="muted">This preview does not deposit or lock tokens.</p>
+        <label for="stake-amount">Amount to stake (demo PULIGO)</label>
+        <input id="stake-amount" type="number" min="1" value="100">
+        <label for="stake-period">Demo staking period</label>
+        <select id="stake-period">
+          <option value="0.015">30 days · 1.5% illustrative reward</option>
+          <option value="0.02">90 days · 2% illustrative reward</option>
+          <option value="0.03">180 days · 3% illustrative reward</option>
+        </select>
+        <button id="stake-button" class="primary">Stake Demo Tokens</button>
+        <p id="stake-status" class="status">No demo tokens staked.</p>
+      </div>
+      <div class="card">
+        <h2>My Staking</h2>
+        <p>Staked demo amount: <strong id="staked-amount">0</strong> PULIGO</p>
+        <p>Illustrative rewards: <strong id="staking-reward">0</strong> PULIGO</p>
+        <div class="actions"><button id="unstake-button">Unstake Demo Tokens</button><button id="claim-rewards">Claim Demo Rewards</button></div>
+        <p id="staking-action-status" class="status">No action taken.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="account" class="section">
+    <div class="grid">
+      <div class="card">
+        <h2>My Account</h2>
+        <p class="muted">Wallet connection status</p>
+        <p id="account-wallet">Not connected</p>
+        <p>Demo credits: <strong id="account-balance">1000.00</strong></p>
+        <p>Demo lottery tickets: <strong id="account-tickets">0</strong></p>
+        <p>Staked demo PULIGO: <strong id="account-staked">0</strong></p>
+      </div>
+      <div class="card">
+        <h2>Withdrawals</h2>
+        <p class="muted">Demo-only withdrawal request; no funds will be transferred.</p>
+        <label for="withdraw-amount">Amount (demo credits)</label>
+        <input id="withdraw-amount" type="number" min="1" value="10">
+        <button id="withdraw-button" class="primary">Request Demo Withdrawal</button>
+        <p id="withdraw-status" class="status">No withdrawal requested.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="notice">Safety notice: this is a development demo. Wallet connection is separate from game payments. All ticket purchases, bets, staking, rewards, claims and withdrawals are simulated and do not transfer cryptocurrency.</p>
+  <footer class="footer">PuliGo Web3 Gaming · Development Preview</footer>
+</main>
+
+<script type="module" src="/src/main.js"></script>
+<script type="module" src="/src/dashboard.js"></script>
+</body>
+</html>
+```
 
